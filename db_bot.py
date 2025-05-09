@@ -69,7 +69,14 @@ strategies = {
 }
 
 questions = [
-    #Insert questions here
+    "Who has hit the most homeruns?",
+    "Which pitcher has the most strikeouts?",
+    "Which New York Yankees player had the most hits?",
+    "Which players were on the 1928 New York Yankees?",
+    "Which players played in Left Field?",
+    "Which players bat lefty?",
+    "Which pitchers are southpaws?",
+    "Which players were born between 1960 and 1970?"
 ]
 
 def sanitizeForJustSql(value):
