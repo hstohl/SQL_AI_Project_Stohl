@@ -59,28 +59,35 @@ def getChatGptResponse(content):
 
 
 # strategies
-commonSqlOnlyRequest = " Give me a sqlite select statement that answers the question. Only respond with sqlite syntax. If there is an error do not explain it!"
+commonSqlOnlyRequest = " Give me a sqlite select statement that returns the answer to the given question. Only respond with sqlite syntax. If there is an error do not explain it!"
 strategies = {
     "zero_shot": setupSqlScript + commonSqlOnlyRequest,
     "single_domain_double_shot": (setupSqlScript +
-                   " What years did Randy Johnson win the Cy Young Award? " +
-                   " \nSELECT year\nFROM awards\nWHERE player_id = (\nSELECT id FROM player\nWHERE first_name = \'Randy\' AND last_name = \'Johnson\'\n)\nAND award_name = \'Cy Young\';\n " +
-                   commonSqlOnlyRequest)
+                " Which New York Yankees player had the most career hits? " +
+                "SELECT p.first_name, p.last_name, SUM(b.hits) AS total_hits\nFROM player p\nJOIN player_team pt ON p.id = pt.player_id\n" +
+                "JOIN team t ON pt.team_id = t.id\nJOIN batting_stats b ON p.id = b.player_id AND t.year = b.year\nWHERE t.name = 'New York Yankees'\n" +
+                "GROUP BY p.id\nORDER BY total_hits DESC\nLIMIT 1;"
+                + commonSqlOnlyRequest)
 }
 
 questions = [
-    "Who has hit the most homeruns?",
+    #"Who has hit the most homeruns?",
     "Which pitcher has the most strikeouts?",
-    "Which New York Yankees player had the most hits?",
-    "Which players were on the 1928 New York Yankees?",
-    "Which players played in Left Field?",
-    "Which players bat lefty?",
-    "Which pitchers are southpaws?",
-    "Which players were born between 1960 and 1970?",
-    "Who has won the most MVP Awards?",
-    "What years did Randy Johnson win the Cy Young Award?",
-    "Did Nolan Ryan ever win a Cy Young?",
-    "When did Shohei Ohtani move to the Los Angeles Dodgers?"
+    "Which New York Yankees player had the most career hits?",
+    "Which pitcher has to lowest ERA?",
+    "Which pitcher has the best win to loss ratio?",
+    #"Which players were on the 1928 New York Yankees?",
+    #"Which players played in Left Field?",
+    #"Which players bat lefty?",
+    #"Which pitchers are southpaws?",
+    #"Which players were born between 1960 and 1970?",
+    #"Who has won the most MVP Awards?",
+    #"What years did Randy Johnson win the Cy Young Award?",
+    #"Did Nolan Ryan ever win a Cy Young?",
+    "When did Shohei Ohtani move to the Los Angeles Dodgers?",
+    "Which batter had the worst batting average in a season?",
+    "Which non-pitcher had the worst batting average in a season?",
+    "Who has had the most hits since 1970?"
 ]
 
 def sanitizeForJustSql(value):
@@ -91,6 +98,8 @@ def sanitizeForJustSql(value):
     if gptEndSqlMarker in value:
         value = value.split(gptEndSqlMarker)[0]
 
+    if value.startswith("ite"):
+        value = value[3:]
     return value
 
 for strategy in strategies:
