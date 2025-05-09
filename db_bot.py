@@ -95,8 +95,8 @@ for strategy in strategies:
             print(sqlSyntaxResponse)
             queryRawResponse = str(runSql(sqlSyntaxResponse))
             print(queryRawResponse)
-            friendlyResultsPrompt = "I asked a question \"" + question +"\" and the response was \""+queryRawResponse+"\" Please, just give a concise response in a more friendly way? Please do not give any other suggests or chatter."
-            # betterFriendlyResultsPrompt = "I asked a question: \"" + question +"\" and I queried this database " + setupSqlScript + " with this query " + sqlSyntaxResponse + ". The query returned the results data: \""+queryRawResponse+"\". Could you concisely answer my question using the results data?"
+            #oldFriendlyResultsPrompt = "I asked the question \"" + question +"\" and the response was \""+queryRawResponse+"\" Give a plain text response to the question  Please do not give any other suggests or chatter."
+            friendlyResultsPrompt = "I asked the question: \"" + question +"\" and I queried this database: \n" + setupSqlScript + "\nwith this query \"" + sqlSyntaxResponse + "\". The query returned this result: \""+queryRawResponse+"\". Provide a simple plain text answer to my question using the information in the query and the result. Please do not give any other suggests or chatter."
             friendlyResponse = getChatGptResponse(friendlyResultsPrompt)
             print(friendlyResponse)
         except Exception as err:
