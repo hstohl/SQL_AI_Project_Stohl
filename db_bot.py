@@ -63,8 +63,8 @@ commonSqlOnlyRequest = " Give me a sqlite select statement that answers the ques
 strategies = {
     "zero_shot": setupSqlScript + commonSqlOnlyRequest,
     "single_domain_double_shot": (setupSqlScript +
-                   " Who doesn't have a way for us to text them? " +
-                   " \nSELECT p.person_id, p.name\nFROM person p\nLEFT JOIN phone ph ON p.person_id = ph.person_id AND ph.can_recieve_sms = 1\nWHERE ph.phone_id IS NULL;\n " +
+                   " What years did Randy Johnson win the Cy Young Award? " +
+                   " \nSELECT year\nFROM awards\nWHERE player_id = (\nSELECT id FROM player\nWHERE first_name = \'Randy\' AND last_name = \'Johnson\'\n)\nAND award_name = \'Cy Young\';\n " +
                    commonSqlOnlyRequest)
 }
 
@@ -76,7 +76,11 @@ questions = [
     "Which players played in Left Field?",
     "Which players bat lefty?",
     "Which pitchers are southpaws?",
-    "Which players were born between 1960 and 1970?"
+    "Which players were born between 1960 and 1970?",
+    "Who has won the most MVP Awards?",
+    "What years did Randy Johnson win the Cy Young Award?",
+    "Did Nolan Ryan ever win a Cy Young?",
+    "When did Shohei Ohtani move to the Los Angeles Dodgers?"
 ]
 
 def sanitizeForJustSql(value):

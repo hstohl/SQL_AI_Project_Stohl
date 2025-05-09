@@ -4,13 +4,13 @@ create table player (
     last_name varchar(20) not null,
     birth_date date not null,
     bat_side varchar(1) not null,
-    throw_arm varchar(1) not null,
+    throw_arm varchar(1) not null
 )
 
 create table team (
     id integer primary key,
     name varchar(20) not null,
-    year integer not null,
+    year integer not null
 )
 
 create table player_team (
@@ -22,7 +22,7 @@ create table player_team (
 
 create table position (
     id integer primary key,
-    position varchar(20) not null,
+    position varchar(20) not null
 )
 
 create table player_position (
@@ -57,5 +57,5 @@ create table awards (
     id integer primary key,
     player_id integer not null,
     award_name varchar(50) not null,
-    year integer not null,
+    year integer not null
 )
