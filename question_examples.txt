@@ -1,0 +1,103 @@
+Which pitcher has the best win to loss ratio?
+
+SELECT 
+    p.first_name, 
+    p.last_name, 
+    (CAST(ps.wins AS REAL) / NULLIF(ps.losses, 0)) AS win_loss_ratio 
+FROM 
+    player p 
+JOIN 
+    pitching_stats ps ON p.id = ps.player_id 
+ORDER BY 
+    win_loss_ratio DESC 
+LIMIT 1;
+
+[('Randy', 'Johnson', 4.8)]
+The pitcher with the best win to loss ratio is Randy Johnson with a ratio of 4.8.
+
+
+When did Shohei Ohtani move to the Los Angeles Dodgers?
+
+SELECT t.year
+FROM player p
+JOIN player_team pt ON p.id = pt.player_id
+JOIN team t ON pt.team_id = t.id
+WHERE p.first_name = 'Shohei' AND p.last_name = 'Ohtani' AND t.name = 'Los Angeles Dodgers';
+
+[(2024,), (2025,)]
+Shohei Ohtani moved to the Los Angeles Dodgers in 2024.
+
+
+Who has had the most hits since 1970?
+
+SELECT p.first_name, p.last_name, SUM(b.hits) AS total_hits
+FROM player p
+JOIN batting_stats b ON p.id = b.player_id
+WHERE b.year >= 1970
+GROUP BY p.id
+ORDER BY total_hits DESC
+LIMIT 1;
+
+[('Barry', 'Bonds', 980)]
+The player who has had the most hits since 1970 is Barry Bonds with 980 hits.
+
+
+Which pitcher has the most strikeouts?
+
+SELECT p.first_name, p.last_name, SUM(ps.strikeouts) AS total_strikeouts
+FROM player p
+JOIN pitching_stats ps ON p.id = ps.player_id
+GROUP BY p.id
+ORDER BY total_strikeouts DESC
+LIMIT 1;
+
+[('Nolan', 'Ryan', 2686)]
+The pitcher with the most strikeouts is Nolan Ryan with 2,686 strikeouts.
+
+
+Did Nolan Ryan ever win a Cy Young?
+
+SELECT COUNT(*)
+FROM awards
+WHERE player_id = (
+    SELECT id FROM player
+    WHERE first_name = 'Nolan' AND last_name = 'Ryan'
+)
+AND award_name = 'Cy Young';
+
+[(0,)]
+No, Nolan Ryan never won a Cy Young.
+
+
+Which players played in Left Field?
+
+SELECT p.first_name, p.last_name 
+FROM player p
+JOIN player_position pp ON p.id = pp.player_id
+JOIN position pos ON pp.position_id = pos.id
+WHERE pos.position = 'Left Field';
+
+[('Barry', 'Bonds'), ('Babe', 'Ruth'), ('Ted', 'Williams')]
+Barry Bonds, Babe Ruth, and Ted Williams played in Left Field.
+
+
+
+Which players bat lefty?
+
+SELECT first_name, last_name FROM player WHERE bat_side = 'L';
+
+[('Barry', 'Bonds'), ('Babe', 'Ruth'), ('Ted', 'Williams'), ('Shohei', 'Ohtani'), ('Lou', 'Gehrig')]
+Barry Bonds, Babe Ruth, Ted Williams, Shohei Ohtani, Lou Gehrig.
+
+
+
+Which pitchers are southpaws?
+
+SELECT p.first_name, p.last_name
+FROM player p
+JOIN player_position pp ON p.id = pp.player_id
+JOIN position pos ON pp.position_id = pos.id
+WHERE pos.position = 'Pitcher' AND p.throw_arm = 'L';
+
+[('Babe', 'Ruth'), ('Randy', 'Johnson')]
+The pitchers who are southpaws are Babe Ruth and Randy Johnson.
